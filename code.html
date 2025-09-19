@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>House Price Predictor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .hero-bg {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        }
+        .predict-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        .fade-in {
+            opacity: 0;
+            animation: fadeIn 0.8s ease-in-out forwards;
+        }
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+    <header class="hero-bg text-white py-16">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-5xl md:text-7xl font-bold mb-4 flex items-center justify-center">
+                <i class="fas fa-home mr-4"></i>
+                House Price Predictor
+            </h1>
+            <p class="text-xl md:text-2xl">Estimate the value of your dream home with our advanced predictor</p>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-12">
+        <section class="max-w-4xl mx-auto">
+            <div class="bg-white rounded-lg shadow-lg p-8">
+                <h2 class="text-3xl font-bold mb-6 text-center">Property Details</h2>
+                <form id="predictionForm" class="space-y-4">
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="area" class="block text-sm font-medium text-gray-700 mb-1">Area (sq ft)</label>
+                            <input type="number" id="area" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="e.g., 7420" required>
+                        </div>
+                        <div>
+                            <label for="bedrooms" class="block text-sm font-medium text-gray-700 mb-1">Bedrooms</label>
+                            <input type="number" id="bedrooms" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="e.g., 3" required>
+                        </div>
+                        <div>
+                            <label for="bathrooms" class="block text-sm font-medium text-gray-700 mb-1">Bathrooms</label>
+                            <input type="number" id="bathrooms" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="e.g., 2" required>
+                        </div>
+                        <div>
+                            <label for="stories" class="block text-sm font-medium text-gray-700 mb-1">Stories</label>
+                            <input type="number" id="stories" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="e.g., 2" required>
+                        </div>
+                        <div>
+                            <label for="mainroad" class="block text-sm font-medium text-gray-700 mb-1">Main Road (1=Yes, 2=No)</label>
+                            <select id="mainroad" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                                <option value="" disabled selected>Select</option>
+                                <option value="1">Yes (1)</option>
+                                <option value="2">No (2)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="guestroom" class="block text-sm font-medium text-gray-700 mb-1">Guest Room (1=Yes, 2=No)</label>
+                            <select id="guestroom" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                                <option value="" disabled selected>Select</option>
+                                <option value="1">Yes (1)</option>
+                                <option value="2">No (2)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="basement" class="block text-sm font-medium text-gray-700 mb-1">Basement (1=Yes, 2=No)</label>
+                            <select id="basement" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                                <option value="" disabled selected>Select</option>
+                                <option value="1">Yes (1)</option>
+                                <option value="2">No (2)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="hotwaterheating" class="block text-sm font-medium text-gray-700 mb-1">Hot Water Heating (1=Yes, 2=No)</label>
+                            <select id="hotwaterheating" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                                <option value="" disabled selected>Select</option>
+                                <option value="1">Yes (1)</option>
+                                <option value="2">No (2)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="airconditioning" class="block text-sm font-medium text-gray-700 mb-1">Air Conditioning (1=Yes, 2=No)</label>
+                            <select id="airconditioning" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                                <option value="" disabled selected>Select</option>
+                                <option value="1">Yes (1)</option>
+                                <option value="2">No (2)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="parking" class="block text-sm font-medium text-gray-700 mb-1">Parking Spaces (0-3)</label>
+                            <select id="parking" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                                <option value="" disabled selected>Select</option>
+                                <option value="0">0</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="prefare" class="block text-sm font-medium text-gray-700 mb-1">Preferred Area (1=Yes, 2=No)</label>
+                            <select id="prefare" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                                <option value="" disabled selected>Select</option>
+                                <option value="1">Yes (1)</option>
+                                <option value="2">No (2)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="furnishingstatus" class="block text-sm font-medium text-gray-700 mb-1">Furnishing Status (1/2/3)</label>
+                            <select id="furnishingstatus" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                                <option value="" disabled selected>Select</option>
+                                <option value="1">Furnished (1)</option>
+                                <option value="2">Semi-furnished (2)</option>
+                                <option value="3">Unfurnished (3)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mt-6">
+                        <button type="submit" id="predictBtn" class="w-full bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold text-lg predict-btn transition duration-300">
+                            <i class="fas fa-calculator mr-2"></i>Predict Price
+                        </button>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2">Note: Encodings match your cleaned dataset: 1/2 for binary fields and 1–3 for furnishingstatus. Adjust mapping in the script if your encoding differs.</p>
+                </form>
+            </div>
+        </section>
+
+        <section id="resultSection" class="mt-12 max-w-4xl mx-auto hidden fade-in">
+            <div class="bg-white rounded-lg shadow-lg p-8">
+                <h2 class="text-3xl font-bold mb-6 text-center">Prediction Result</h2>
+                <div class="text-center">
+                    <div class="text-6xl font-bold text-green-600 mb-4" id="predictedPrice"></div>
+                    <p class="text-gray-600 mb-4">Estimated House Value</p>
+                    <div class="grid md:grid-cols-3 gap-4 text-center">
+                        <div>
+                            <img src="https://placehold.co/150x100" alt="Detailed illustration of a modern suburban house with green lawn, garage, and windows reflecting sunny weather in a classic American neighborhood style" class="mx-auto mb-2 rounded">
+                            <p class="text-sm">Based on your inputs</p>
+                        </div>
+                        <div>
+                            <img src="https://placehold.co/150x100" alt="Graph chart showing increasing house price trends with upward arrows and currency symbols in a blue and white financial data visualization style" class="mx-auto mb-2 rounded">
+                            <p class="text-sm">Market Trends Considered</p>
+                        </div>
+                        <div>
+                            <img src="https://placehold.co/150x100" alt="Checklist icon with approved marks next to home features like size, location, and amenities in a green tick-mark proficient style" class="mx-auto mb-2 rounded">
+                            <p class="text-sm">Factors Evaluated</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mt-12 max-w-4xl mx-auto">
+            <div class="bg-white rounded-lg shadow-lg p-8">
+                <h2 class="text-3xl font-bold mb-6 text-center">Features Considered</h2>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div class="text-center">
+                        <i class="fas fa-ruler fa-2x text-blue-500 mb-2"></i>
+                        <h3 class="font-semibold">Size</h3>
+                        <p class="text-sm text-gray-600">Square footage and layout</p>
+                    </div>
+                    <div class="text-center">
+                        <i class="fas fa-bed fa-2x text-blue-500 mb-2"></i>
+                        <h3 class="font-semibold">Bedrooms & Bathrooms</h3>
+                        <p class="text-sm text-gray-600">Room count and amenities</p>
+                    </div>
+                    <div class="text-center">
+                        <i class="fas fa-calendar fa-2x text-blue-500 mb-2"></i>
+                        <h3 class="font-semibold">Age</h3>
+                        <p class="text-sm text-gray-600">Property age and condition</p>
+                    </div>
+                    <div class="text-center">
+                        <i class="fas fa-car fa-2x text-blue-500 mb-2"></i>
+                        <h3 class="font-semibold">Garage</h3>
+                        <p class="text-sm text-gray-600">Parking and storage</p>
+                    </div>
+                    <div class="text-center">
+                        <i class="fas fa-map-marker-alt fa-2x text-blue-500 mb-2"></i>
+                        <h3 class="font-semibold">Location</h3>
+                        <p class="text-sm text-gray-600">Neighborhood desirability</p>
+                    </div>
+                    <div class="text-center">
+                        <i class="fas fa-chart-line fa-2x text-blue-500 mb-2"></i>
+                        <h3 class="font-semibold">Market Trends</h3>
+                        <p class="text-sm text-gray-600">Current market conditions</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4 text-center">
+            <p>© 2023 House Price Predictor. Built with HTML, CSS, and JavaScript.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Coefficients from Housing_Price_Predictor_Project.ipynb (OLS solution)
+        // Y = sum(Wi * Xi) + B using the following features order:
+        // area, bedrooms, bathrooms, stories, mainroad, guestroom, basement,
+        // hotwaterheating, airconditioning, parking, prefare, furnishingstatus
+        const COEFFS = {
+            area: 2.43906887e+02,
+            bedrooms: 1.19474386e+05,
+            bathrooms: 9.88888287e+05,
+            stories: 4.50391518e+05,
+            mainroad: -4.23100741e+05,
+            guestroom: -2.98030507e+05,
+            basement: -3.57926360e+05,
+            hotwaterheating: -8.72936027e+05,
+            airconditioning: -8.53633595e+05,
+            parking: 2.79785637e+05,
+            prefare: -6.47055599e+05,
+            furnishingstatus: -2.13187781e+05,
+            bias: 7.22041995e+06
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('predictionForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                computePrediction();
+            });
+        });
+
+        function val(id) {
+            return parseFloat(document.getElementById(id).value);
+        }
+
+        function computePrediction() {
+            const inputs = {
+                area: val('area'),
+                bedrooms: val('bedrooms'),
+                bathrooms: val('bathrooms'),
+                stories: val('stories'),
+                mainroad: val('mainroad'),
+                guestroom: val('guestroom'),
+                basement: val('basement'),
+                hotwaterheating: val('hotwaterheating'),
+                airconditioning: val('airconditioning'),
+                parking: val('parking'),
+                prefare: val('prefare'),
+                furnishingstatus: val('furnishingstatus')
+            };
+
+            if (Object.values(inputs).some(v => Number.isNaN(v))) {
+                alert('Please complete all fields with valid values.');
+                return;
+            }
+
+            let price =
+                COEFFS.area * inputs.area +
+                COEFFS.bedrooms * inputs.bedrooms +
+                COEFFS.bathrooms * inputs.bathrooms +
+                COEFFS.stories * inputs.stories +
+                COEFFS.mainroad * inputs.mainroad +
+                COEFFS.guestroom * inputs.guestroom +
+                COEFFS.basement * inputs.basement +
+                COEFFS.hotwaterheating * inputs.hotwaterheating +
+                COEFFS.airconditioning * inputs.airconditioning +
+                COEFFS.parking * inputs.parking +
+                COEFFS.prefare * inputs.prefare +
+                COEFFS.furnishingstatus * inputs.furnishingstatus +
+                COEFFS.bias;
+
+            const formattedPrice = new Intl.NumberFormat('en-IN', {
+                style: 'currency',
+                currency: 'INR',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(price);
+
+            document.getElementById('predictedPrice').textContent = formattedPrice;
+            const section = document.getElementById('resultSection');
+            section.classList.remove('hidden');
+            section.classList.add('fade-in');
+            section.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
+</content>
+</create_file>
